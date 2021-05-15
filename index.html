@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Monthly Temperature of Delhi</title>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="CSS/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="CSS/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="CSS/favicon-16x16.png">
+  <link rel="manifest" href="CSS/site.webmanifest">
+  <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+  <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+  <style >
+
+    html,
+    body,
+    #container {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  
+</style>
+</head>
+<body>
+  
+  <div id="container"></div>
+  
+
+  <script>
+
+    anychart.onDocumentReady(function () {
+      // create bar chart
+      
+
+      //chart.animation(true);
+
+      
+
+      // create bar series with passed data
+        var data = {
+            header: ["Month", "Highest temperature in Celsius"],
+            rows: [
+              ["Jan",20],
+              ["Feb", 23.5],
+              ["Mar", 29.8],
+              ["Apr", 36.7],
+              ["May", 39.6],
+              ["Jun", 38.2],
+              ["Jul", 33.7],["Aug",32.3],["Sep",32.2],
+              ["Oct",31.8],["Nov",27.4],["Dec",22.2]
+        ]};
+        
+      
+      var chart = anychart.column();
+
+      chart.data(data);  
+      chart.padding([10, 40, 5, 20]);
+
+      chart.title('Monthly temperatureof Delhi');
+      // set yAxis labels formatter
+      //chart.yAxis().labels().format('{%Value}{groupsSeparator: }');
+
+      // set titles for axises
+      chart.xAxis().title('Month');
+      chart.yAxis().title('Max temperature');
+      //chart.interactivity().hoverMode('by-x');
+      chart.tooltip().positionMode('point');
+      // set scale minimum
+      chart.yScale().minimum(0);
+
+      // set container id for the chart
+      chart.container('container');
+      // initiate chart drawing
+      chart.draw();
+    });
+  
+</script>
+  <div id="container"></div>
+  <script>
+    anychart.onDocumentReady(function () {
+
+      // load data
+      anychart.data.loadCsvFile("tem.csv", function (data) {
+
+        // create a data table
+        var dataTable = anychart.data.table();
+        dataTable.addData(data);
+
+        // map data
+        var mapping = dataTable.mapAs({ 'high': 2, 'low': 1});
+
+        // set the chart type
+        var chart = anychart.stock();
+
+        // set the series
+        var series = chart.plot(0).candlestick(mapping);
+        series.name("Max Temperature");
+
+        // set the chart title
+        chart.title("MAX MIN Temperature");
+
+        // create a plot
+        var plot = chart.plot(0);
+        // create an EMA indicator with period 20
+        var ema20 = plot.ema(mapping, 20).series();
+        // set the EMA color
+        ema20.stroke('#bf360c');
+    
+        // disable the scroller axis
+        chart.scroller().xAxis(false);
+        // map "open" values for the scroller
+        openValue = dataTable.mapAs();
+        openValue.addField('value', 2);
+        // create a scroller series with the mapped data
+        chart.scroller().column(openValue);
+    
+        // modify the color of candlesticks making them black and white
+        series.fallingFill("black");
+        series.fallingStroke("black");
+        series.risingFill("white");
+        series.risingStroke("black");
+
+        // set the container id
+        chart.container('container');
+
+        // draw the chart
+        chart.draw();
+
+      });
+
+    });
+  </script>
+</body>
+</html>
+                
